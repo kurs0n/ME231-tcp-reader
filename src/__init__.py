@@ -1,0 +1,1 @@
+"""Modul aplikacji ME231."""

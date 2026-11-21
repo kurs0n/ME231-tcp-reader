@@ -35,6 +35,17 @@ Błędy połączenia, odczytu lub zapisu są pokazywane w oknie aplikacji albo w
 pyinstaller --noconfirm --clean --onefile --windowed --name ME231 --collect-all matplotlib --collect-all pymodbus launcher.py
 ```
 
+## Publikacja Windows x64 na GitHub Releases
+
+Workflow GitHub Actions buduje plik `ME231.exe` dla Windows x64 i dołącza go do GitHub Release po wypchnięciu taga w formacie `v*`, np.:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Wynikowy plik znajdziesz w sekcji Releases repozytorium.
+
 ## Struktura projektu
 
 - `src/main.py` - uruchomienie aplikacji

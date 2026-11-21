@@ -30,6 +30,11 @@ Raport zawiera osobne arkusze: `Pomiary` z danymi oraz `Moce`, `Napiecia` i `Pra
 
 Błędy połączenia, odczytu lub zapisu są pokazywane w oknie aplikacji albo wypisywane w terminalu. Przy braku połączenia aplikacja przypomina o przełączeniu sieci Wi-Fi na `USR-DR164_8282`.
 
+## Build na windows
+```bash
+pyinstaller --noconfirm --clean --onefile --windowed --name ME231 --collect-all matplotlib --collect-all pymodbus launcher.py
+```
+
 ## Struktura projektu
 
 - `src/main.py` - uruchomienie aplikacji

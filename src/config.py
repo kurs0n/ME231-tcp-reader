@@ -20,7 +20,7 @@ DEFAULT_CONFIG = {
     "export_xlsx_on_exit": True,
 }
 
-MEASUREMENTS = {
+MEASUREMENTS_MAIN = {
     "I1_A": 1000,
     "I2_A": 1002,
     "I3_A": 1004,
@@ -58,6 +58,24 @@ MEASUREMENTS = {
     "Energia_czynna_oddana_kWh": 1078,
     "Energia_bierna_indukcyjna_kvarh": 1080,
     "Energia_bierna_pojemnosciowa_kvarh": 1082,
+}
+
+MEASUREMENTS_THD_U = {
+    "THD_U1_proc": 5000,
+    "THD_U2_proc": 5002,
+    "THD_U3_proc": 5004,
+}
+
+MEASUREMENTS_THD_I = {
+    "THD_I1_proc": 4000,
+    "THD_I2_proc": 4002,
+    "THD_I3_proc": 4004,
+}
+
+MEASUREMENTS = {
+    **MEASUREMENTS_MAIN,
+    **MEASUREMENTS_THD_U,
+    **MEASUREMENTS_THD_I,
 }
 
 
@@ -111,7 +129,7 @@ def run_control_window():
     """Uruchamia okno sterujące; zbieranie danych odbywa się w osobnym wątku."""
     root = tk.Tk()
     root.title("ME231 / USR-DR164 – Monitoring")
-    root.minsize(900, 620)
+    root.minsize(950, 660)
 
     frame = ttk.Frame(root, padding=16)
     frame.grid(row=0, column=0, sticky="nsew")

@@ -5,29 +5,62 @@ import time
 
 from pymodbus.client import ModbusTcpClient
 
-from .config import MEASUREMENTS
+from .config import (
+    MEASUREMENTS,
+    MEASUREMENTS_MAIN,
+    MEASUREMENTS_THD_I,
+    MEASUREMENTS_THD_U,
+)
+
+
+def _read_holding_registers(client, address, count, slave_id):
+    try:
+        result = client.read_holding_registers(
+            address=address, count=count, device_id=slave_id
+        )
+    except TypeError:
+        result = client.read_holding_registers(
+            address=address, count=count, slave=slave_id
+        )
+
+    if result is None or result.isError():
+        return None
+    return result.registers
 
 
 def read_all_fast(client, slave_id):
-    """Odczytuje rejestry 1000-1083 w jednej ramce Modbus."""
+    """Odczytuje rejestry pomiarowe 1000-1083 oraz rejestry THD (4000-4005, 5000-5005)."""
     try:
-        try:
-            result = client.read_holding_registers(
-                address=1000, count=84, device_id=slave_id
-            )
-        except TypeError:
-            result = client.read_holding_registers(
-                address=1000, count=84, slave=slave_id
-            )
-
-        if result.isError():
+        regs_main = _read_holding_registers(client, 1000, 84, slave_id)
+        if regs_main is None or len(regs_main) < 84:
             return None
 
         data = {}
-        for name, addr in MEASUREMENTS.items():
+        for name, addr in MEASUREMENTS_MAIN.items():
             idx = addr - 1000
-            raw = struct.pack(">HH", result.registers[idx], result.registers[idx + 1])
+            raw = struct.pack(">HH", regs_main[idx], regs_main[idx + 1])
             data[name] = round(struct.unpack(">f", raw)[0], 3)
+
+        # Odczyt THD pradu (rejestry 4000-4005: I1THD, I2THD, I3THD)
+        regs_thd_i = _read_holding_registers(client, 4000, 6, slave_id)
+        for name, addr in MEASUREMENTS_THD_I.items():
+            if regs_thd_i is not None and len(regs_thd_i) >= 6:
+                idx = addr - 4000
+                raw = struct.pack(">HH", regs_thd_i[idx], regs_thd_i[idx + 1])
+                data[name] = round(struct.unpack(">f", raw)[0], 3)
+            else:
+                data[name] = 0.0
+
+        # Odczyt THD napiecia (rejestry 5000-5005: U1THD, U2THD, U3THD)
+        regs_thd_u = _read_holding_registers(client, 5000, 6, slave_id)
+        for name, addr in MEASUREMENTS_THD_U.items():
+            if regs_thd_u is not None and len(regs_thd_u) >= 6:
+                idx = addr - 5000
+                raw = struct.pack(">HH", regs_thd_u[idx], regs_thd_u[idx + 1])
+                data[name] = round(struct.unpack(">f", raw)[0], 3)
+            else:
+                data[name] = 0.0
+
         return data
     except Exception:
         return None

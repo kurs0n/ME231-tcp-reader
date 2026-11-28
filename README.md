@@ -24,9 +24,9 @@ python3 -m src.main
 
 W oknie programu ustaw adres IP bramki, port, Slave ID licznika oraz nazwy plików. Domyślne nazwy zawierają bieżącą datę, np. `me231_pomiary_2026-11-21.csv`. Przycisk `Start` uruchamia zbieranie danych w osobnym wątku, a `Stop` zatrzymuje je i generuje raport XLSX. Dane CSV są dopisywane do wskazanego pliku.
 
-Na wykresach pokazywana jest sama godzina (`GG:MM:SS`); pełna data pozostaje w pliku CSV.
+Na wykresach pokazywana jest sama godzina (`GG:MM:SS`); pełna data pozostaje w pliku CSV. Wykresy na żywo podzielone są na zakładki: przebiegi podstawowe (moce, napięcia, prądy), odkształcenia harmoniczne THD (dla napięć i prądów fazowych) oraz widok łączony.
 
-Raport zawiera osobne arkusze: `Pomiary` z danymi oraz `Moce`, `Napiecia` i `Prady` z wykresami.
+Raport XLSX zawiera osobne arkusze: `Pomiary` z danymi oraz `Moce`, `Napiecia`, `Prady`, `THD_Napiecia` i `THD_Prady` z wykresami.
 
 Błędy połączenia, odczytu lub zapisu są pokazywane w oknie aplikacji albo wypisywane w terminalu. Przy braku połączenia aplikacja przypomina o przełączeniu sieci Wi-Fi na `USR-DR164_8282`.
 

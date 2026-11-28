@@ -46,6 +46,8 @@ def export_csv_to_xlsx(csv_file, xlsx_file, status_queue=None):
         wb.create_sheet("Moce")
         wb.create_sheet("Napiecia")
         wb.create_sheet("Prady")
+        wb.create_sheet("THD_Napiecia")
+        wb.create_sheet("THD_Prady")
         try:
             wb.save(xlsx_file)
             print(f"Zapisano {xlsx_file} (za malo wierszy na wykresy).")
@@ -75,11 +77,16 @@ def export_csv_to_xlsx(csv_file, xlsx_file, status_queue=None):
         chart.height = 10
         chart.visible_cells_only = False
 
+        added = False
         for name in series_names:
             col = col_index.get(name)
             if col:
                 data = Reference(ws, min_col=col, min_row=1, max_row=max_row)
                 chart.add_data(data, titles_from_data=True)
+                added = True
+
+        if not added:
+            return
 
         time_col_letter = get_column_letter(time_col)
         categories = AxDataSource(
@@ -108,6 +115,18 @@ def export_csv_to_xlsx(csv_file, xlsx_file, status_queue=None):
         "Prady fazowe I1, I2, I3",
         "A",
         ["I1_A", "I2_A", "I3_A"],
+    )
+    add_chart(
+        "THD_Napiecia",
+        "Harmoniczne THD napiecia (U1, U2, U3)",
+        "%",
+        ["THD_U1_proc", "THD_U2_proc", "THD_U3_proc"],
+    )
+    add_chart(
+        "THD_Prady",
+        "Harmoniczne THD pradu (I1, I2, I3)",
+        "%",
+        ["THD_I1_proc", "THD_I2_proc", "THD_I3_proc"],
     )
 
     try:

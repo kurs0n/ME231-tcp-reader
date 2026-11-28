@@ -4,3 +4,4 @@ __pycache__/
 *.xlsx
 build/
 dist/
+.DS_STORE
